@@ -26,48 +26,38 @@ export const featuresReducer = (state = initialState, action) => {
         case "TOGGLE_FEATURE":
             const isAdded = state.featuresDict[action.payload];
             if (isAdded === undefined) { return state };
+            
             const targetArr = isAdded ? state.car.features : state.additionalFeatures;
-            const index = targetArr.findIndex(feature => (
-                feature.id === Number(action.payload)
-            ));
+            
+            let index;
+            const arrWithoutFeature = targetArr.filter((item, i) => {
+                const isItem = item.id === action.payload;
+                if (isItem) { index = i; }
+                return !isItem;
+            });
             const feature = targetArr[index];
-            const newArr = [...targetArr];
-            newArr.splice(index, 1);
-            if (isAdded) {
-                return {
-                    ...state,
-                    additionalPrice: state.additionalPrice - feature.price,
-                    car: {
-                        ...state.car,
-                        features: newArr
-                    },
-                    additionalFeatures: [
-                        ...state.additionalFeatures,
-                        { ...feature }
-                    ],
-                    featuresDict: {
-                        ...state.featuresDict,
-                        [action.payload]: !isAdded
-                    }
-                };
-            } else {
-                return {
-                    ...state,
-                    additionalPrice: state.additionalPrice + feature.price,
-                    car: {
-                        ...state.car,
-                        features: [
-                            ...state.car.features,
-                            { ...feature }
-                        ]
-                    },
-                    additionalFeatures: newArr,
-                    featuresDict: {
-                        ...state.featuresDict,
-                        [action.payload]: !isAdded
-                    }
-                };
-            }
+            
+            const carFeatures = isAdded ? 
+                arrWithoutFeature : 
+                [...state.car.features, {...feature}];
+            
+            const additionalFeatures = isAdded ? 
+                [...state.additionalFeatures, {...feature}] : 
+                arrWithoutFeature
+            
+            return {
+                ...state,
+                additionalPrice: state.additionalPrice - feature.price,
+                car: {
+                    ...state.car,
+                    features: carFeatures
+                },
+                additionalFeatures: additionalFeatures,
+                featuresDict: {
+                    ...state.featuresDict,
+                    [action.payload]: !isAdded
+                }
+            };
         default: return state;
     }
 }
