@@ -1,11 +1,11 @@
 import React from 'react';
 
-const AddedFeature = props => {
+const AddedFeature = ({ feature, toggleFeature }) => {
   return (
     <li>
       {/* Add an onClick to run a function to remove a feature */}
-      <button className="button" onClick={() => props.toggleFeature(props.feature.id)}>X</button>
-      {props.feature.name}
+      <button className="button" onClick={() => toggleFeature(feature.id)}>X</button>
+      {feature.name}
     </li>
   );
 };

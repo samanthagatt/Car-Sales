@@ -1,14 +1,16 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { toggleFeature } from "../actions/featuresActions";
 import AdditionalFeature from './AdditionalFeature';
 
-const AdditionalFeatures = props => {
+const AdditionalFeatures = ({ additionalFeatures, toggleFeature }) => {
   return (
     <div className="content">
       <h4>Additional Features</h4>
-      {props.additionalFeatures.length ? (
+      {additionalFeatures.length ? (
         <ol type="1">
-          {props.additionalFeatures.map(item => (
-            <AdditionalFeature key={item.id} feature={item} toggleFeature={props.toggleFeature} />
+          {additionalFeatures.map(item => (
+            <AdditionalFeature key={item.id} feature={item} toggleFeature={toggleFeature} />
           ))}
         </ol>
       ) : (
@@ -18,4 +20,8 @@ const AdditionalFeatures = props => {
   );
 };
 
-export default AdditionalFeatures;
+const mapStateToProps = state => ({
+  additionalFeatures: state.additionalFeatures
+});
+
+export default connect(mapStateToProps, { toggleFeature })(AdditionalFeatures);
